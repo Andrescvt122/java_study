@@ -1,5 +1,6 @@
 import java.util.Scanner;
-void main() {
+
+public static void practica1(){
     Scanner sc = new Scanner(System.in);
     StringBuilder sb = new StringBuilder();
     System.out.println("Vamos a gestionar los datos basicos: " +
@@ -16,11 +17,103 @@ void main() {
     double oxigenoDisponible = sc.nextFloat();
     sc.nextLine();
     System.out.println("ingrese el rango militar");
-    char rangoMilitar = 'A';
+    char rangoMilitar = sc.next().charAt(0);
     System.out.println("Ingrese su estado de alerta True/False");
     boolean estadoAlerta = sc.nextBoolean();
-    System.out.println("RESUMEN DE SUS");
-    sb.append("Id de la cabina ").append(idCabina).append(" Dias en mision ").append(diasEnMision).append(" Distancia recorrida ").append(distanciaRecorrida).append(" Oxigeno disponible ").append(oxigenoDisponible).append(" Rango militar ").append(rangoMilitar).append(" Estado de alerta ").append(estadoAlerta);
-    String resumen = sb.toString();
-    System.out.println("RESUMEN DEL REGISTRO:"+System.lineSeparator()+resumen);
+    boolean peligro = oxigenoDisponible <= 30 && estadoAlerta;
+    System.out.printf("RESUMEN DE SU REGISTRo %n id de la cabina %s %n los dias que llevas en mision %d %n distancia recorrida en kms %d %n oxigeno disponible %.2f %n rango milifar %c estado de alerta %b %n MISION EN PELIGRO: %b %n FINAL DEL RESUMEN", Integer.toBinaryString(idCabina), diasEnMision, distanciaRecorrida, oxigenoDisponible, rangoMilitar, estadoAlerta, peligro);
+}
+
+public static void practica2(){
+    //Ingresa variables fijas
+    //Se inicia intensidad desde afuera del switch para poderlo usar en cualquier lugar de la funcion paracticas2();
+    double intensidad;
+    final double oxigeno = 90.982;
+    final double combustible = 80.928;
+    final double distancia = 182723123.92834;
+    //inicia Scanner desde java.util.scanner;
+    Scanner sc = new Scanner(System.in);
+    //Ciclo para ingresar la intensidad
+    do {
+        intensidad=0.0;
+        try {
+            IO.println("Para comenzar con el control, primero ingresa la intensidad");
+            intensidad = sc.nextDouble();
+            if(Double.compare(intensidad, 0.0) <0){
+                IO.println("La intensidad no puede ser negativa");
+            }
+            if (intensidad == 0.0 ) {
+                IO.println("La intensidad no puede ser 0 o vacia, favor de diligence correctamente");
+            }
+        }catch(InputMismatchException e){
+            IO.println("Ingresar un dato umero valido");
+            sc.nextLine();
+        }
+    }while (intensidad == 0 || Double.compare(intensidad, 0.0)<0);
+    //Nombramiento del ciclo del swtich
+    cicloSwitch:
+    do{
+        System.out.printf("Indica la accion que quieres realizar %n 1.Acelerar %n 2.Rotar %n 3. Estado %n 4. Terminar registro");
+        String accion = sc.nextLine().toLowerCase();
+        //Swtich de las acciones
+       switch (accion){
+           //Caso 1. acelerar
+           case "acelerar":
+               do {
+                   try {
+                       IO.println("Ingresa el valor de la aceleracion");
+                       int aceleracion = sc.nextInt();
+                       //Validacion si aceleracion es mayor a 80
+                       IO.println(aceleracion >= 80 ? "Combustion  maxima" : "Acelerando gradualmente");
+                       break;
+                       //control de error si se ingresa un dato no compatible en el sc.nextInt;
+                   }catch (InputMismatchException e){
+                       IO.println("El valor ingresado tiene que ser un entero, ejem: 10, 40 sin decimales, favor de ingresar nuevamente correctamente");
+                   }
+                   }while(true);
+               break;
+               //Caso 2. rotar
+           case "rotar":
+               do{
+                   try{
+                       IO.println("Ingresa el angulo de rotacion, sea un numero entero o decimal");
+                       double angulo = sc.nextDouble();
+                       //Validacion si es una rotacion estandar (90, 180) o personalizada
+                       IO.println(angulo == 90 || angulo == 180 ? "Rotacion estandar establecida" : "Rotacion personalizada establecida");
+                       break;
+                       //control de error de valor ingresado no compatible
+                   }catch(InputMismatchException e){
+                       IO.println("El valor ingresado no corresponde a un entero o decimal, favor de ingresar el angulo con un valor decimal o un valor entero, ejem 10, 90, 80.3");
+                   }
+               }while(true);
+               break;
+           //Caso 3. Estado
+           case "Estado":
+               //resumen del estado con maximo 2 decimales
+               System.out.printf("RESUMEN RAPIDO %n Oxigeno disponible: %.2f %n Combustible disponible: %.2f",oxigeno,combustible);
+               break;
+           //Caso 4. terminar
+           case "terminar":
+               //Informe sobre el estado del combustible
+               if(combustible == 0 && combustible <= 20){
+                   IO.println("Combustible critico a terminal");
+               }else if (combustible >= 21 && combustible <= 50 ){
+                   IO.println("Combustible moderado");
+               }else if(combustible >= 51){
+                   IO.println("Combustible optimo");
+               }
+               //Tiempo restante de dias
+               System.out.printf("TIEMPO RESTANTE DEL VIAJE EN DIAS: %.3f dias", distancia/intensidad);
+               //Ciierre del ciclo do-while principal
+               break cicloSwitch;
+           default:
+               //Control
+               System.out.printf("Ingresar una accion valida: %n 1. Acelerar %n 2. Rotar %n 3. Estado %n 4. Terminar");
+       }
+    }while(true);
+}
+
+void main() {
+//    practica1();
+    practica2();
 }
