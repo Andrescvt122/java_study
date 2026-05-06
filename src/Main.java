@@ -1,5 +1,44 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
+public static class Suministro{
+    //atributos encapsulados
+    private String nombre;
+    private int cantidad;
+    //getters
+    public String getNombre(){
+        return nombre;
+    }
+    public int getCantidad(){
+        return cantidad;
+    }
+    //setters
+    public void setNombre(String nombre){
+       if(nombre == null || nombre.trim().isEmpty()){
+           System.out.println("El nombre no puede estar vacio");
+           return;
+       }
+       this.nombre = nombre;
+    }
+    public void setCantidad(int cantidad){
+        if(cantidad <= 0 ){
+            System.out.println("Cantidad no pueded ser igual a 0 o negativa");
+            return;
+        }
+      this.cantidad = cantidad;
+    };
+    //comportamiento
+    public void consumir(int cantidad){
+        if(cantidad <= 0 ){
+            System.out.println("Cantidad no pueded ser igual a 0 o negativa");
+            return;
+        }
+        if(cantidad > this.cantidad){
+            System.out.println("La cantidad no puede ser mayor a la cantidad actual del suminisstro");
+            return;
+        }
+        this.cantidad -= cantidad;
+    }
+}
 public static void practica1(){
     Scanner sc = new Scanner(System.in);
     StringBuilder sb = new StringBuilder();
@@ -113,7 +152,84 @@ public static void practica2(){
     }while(true);
 }
 
+public static void gestionSuministros(){
+    Scanner sc = new Scanner(System.in);
+    Suministro[] suministros = new Suministro[3];
+    suministros[0] = new Suministro();
+    suministros[0].setNombre("Comida");
+    suministros[0].setCantidad(90);
+    suministros[1] = new Suministro();
+    suministros[1].setNombre("Agua");
+    suministros[1].setCantidad(180);
+    suministros[2] = new Suministro();
+    suministros[2].setNombre("Medicos");
+    suministros[2].setCantidad(50);
+    int acc = 0;
+    Runnable resumenMision = () ->{
+        StringBuilder sb = new StringBuilder();
+        for(Suministro s : suministros){
+            sb.append("Nombre: " + s.getNombre());
+            sb.append("\n Cantidad: " + s.getCantidad());
+        }
+        sb.append("\n Cantidad total: " + acc);
+        System.out.println(sb.toString());
+    };
+    buclePrincipal:
+    do{
+        System.out.printf("SELECCIONE LAS OPCIONES QUE REQUIERES REALIZAR: %n 1. Ver inventario 2. Consumi 3. Salir");
+        int opcion = sc.nextInt();
+        sc.nextLine();
+        switch (opcion){
+            case 1:
+                System.out.println("Inventario actual:");
+                resumenMision.run();
+                break;
+            case 2:
+                bucleOpcion2:
+                do{
+                    try{
+                    System.out.println("Ingrese la cantidad que quiere consumir");
+                    int cantidadConsumir = sc.nextInt();
+                    sc.nextLine();
+                    if(cantidadConsumir <= 0){
+                        System.out.println("La cantidad tiene que ser positiva");
+                        continue;
+                    }
+                    bucleConsumir:
+                    do{
+                        try{
+                            System.out.println("Ingrese el suministro que desea consumir, ingresa el id (identificador) (numero)");
+                            for (int i=0; i < suministros.length; i ++){
+                                System.out.printf("id: %d, %n nombre: %s, %n cantidad: %d", i ++, suministros[i].getNombre(), suministros[i].getCantidad());
+                            }
+                            int suministroAComsumir = sc.nextInt();
+                            sc.nextLine();
+                            suministros[suministroAComsumir].consumir(cantidadConsumir);
+                            break bucleConsumir;
+                        }catch (ArrayIndexOutOfBoundsException e){
+                            System.out.println("Favor, ingresar un suminstro existente mediante su identificador");
+                        }
+                    }while(true);
+                    break bucleOpcion2;
+                }catch(InputMismatchException e){
+                    System.out.println("La cantidad tiene que ser un entero (1,2,3.....");
+                }
+                }while(true);
+            case 3:
+               System.out.println("Resumen de la mision: ");
+               resumenMision.run();
+
+                break buclePrincipal;
+            default:
+                System.out.println("Ingresar una opcion valida");
+        }
+    }while(true);
+}
+
+
 void main() {
 //    practica1();
-    practica2();
-}
+//    practica2();
+    gestionSuministros();
+
+};
